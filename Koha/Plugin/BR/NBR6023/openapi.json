@@ -1,0 +1,52 @@
+{
+  "/biblios/{biblio_id}/reference": {
+    "get": {
+      "x-mojo-to": "BR::NBR6023::Controller#get",
+      "operationId": "getAbntReference",
+      "tags": ["abnt"],
+      "summary": "Referência ABNT NBR 6023 do registro bibliográfico",
+      "parameters": [
+        {
+          "name": "biblio_id",
+          "in": "path",
+          "description": "Número do registro (biblionumber)",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "name": "mode",
+          "in": "query",
+          "description": "essencial ou completo (padrão: o da configuração)",
+          "required": false,
+          "type": "string",
+          "enum": ["essencial", "completo"]
+        }
+      ],
+      "produces": ["application/json"],
+      "responses": {
+        "200": {
+          "description": "Referência gerada",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "biblio_id": { "type": "integer" },
+              "mode": { "type": "string" },
+              "type": { "type": "string" },
+              "html": { "type": "string" },
+              "text": { "type": "string" },
+              "warnings": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "404": {
+          "description": "Registro não encontrado",
+          "schema": { "type": "object", "properties": { "error": { "type": "string" } } }
+        },
+        "500": {
+          "description": "Erro interno",
+          "schema": { "type": "object", "properties": { "error": { "type": "string" } } }
+        }
+      }
+    }
+  }
+}

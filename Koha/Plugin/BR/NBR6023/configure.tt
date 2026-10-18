@@ -1,0 +1,136 @@
+[% USE raw %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>Referência ABNT (NBR 6023) &rsaquo; Plugins &rsaquo; Koha</title>
+[% INCLUDE 'doc-head-close.inc' %]
+<style>
+  .abnt-conf fieldset.rows li { padding-block: 4px }
+  .abnt-conf .hint { display: block; color: #666; font-size: .9em; margin-left: 0 }
+  .abnt-conf textarea { width: 32em; max-width: 100% }
+</style>
+</head>
+<body id="plugins_abnt_configure" class="plugins">
+[% WRAPPER 'header.inc' %]
+    [% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+<nav id="breadcrumbs" aria-label="Breadcrumb" class="breadcrumbs">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/cgi-bin/koha/mainpage.pl">Início</a></li>
+    <li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Referência ABNT: configuração</li>
+  </ol>
+</nav>
+
+<div class="main container-fluid abnt-conf">
+  <div class="row">
+    <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      <h1>Referência ABNT (NBR 6023)</h1>
+      <p>Versão [% version | html %]. As opções valem para todas as referências geradas nesta instalação.</p>
+
+      <form method="post" action="/cgi-bin/koha/plugins/run.pl">
+        [% INCLUDE 'csrf-token.inc' %]
+        <input type="hidden" name="class" value="[% CLASS | html %]" />
+        <input type="hidden" name="method" value="[% METHOD | html %]" />
+        <input type="hidden" name="op" value="cud-save" />
+
+        <fieldset class="rows">
+          <legend>Onde aparece</legend>
+          <ol>
+            <li>
+              <label for="label">Rótulo do botão (intranet e link próprio no OPAC):</label>
+              <input type="text" id="label" name="label" value="[% conf.label | html %]" size="30" />
+            </li>
+            <li>
+              <label for="show_opac">No OPAC:</label>
+              <input type="checkbox" id="show_opac" name="show_opac" value="1" [% IF conf.show_opac %]checked="checked"[% END %] />
+            </li>
+            <li>
+              <label for="opac_in_cite">No OPAC, dentro do menu "Citar":</label>
+              <input type="checkbox" id="opac_in_cite" name="opac_in_cite" value="1" [% IF conf.opac_in_cite %]checked="checked"[% END %] />
+              <span class="hint">Entra em ordem alfabética junto de APA, Chicago, Harvard e MLA. Desmarcado, ou se o tema não tiver o menu "Citar", aparece como link próprio nas ações.</span>
+            </li>
+            <li>
+              <label for="cite_label">Nome no menu "Citar":</label>
+              <input type="text" id="cite_label" name="cite_label" value="[% conf.cite_label | html %]" size="12" />
+            </li>
+            <li>
+              <label for="show_intranet">Na intranet:</label>
+              <input type="checkbox" id="show_intranet" name="show_intranet" value="1" [% IF conf.show_intranet %]checked="checked"[% END %] />
+              <span class="hint">Na intranet, a janela também mostra avisos sobre a catalogação.</span>
+            </li>
+          </ol>
+        </fieldset>
+
+        <fieldset class="rows">
+          <legend>Elementos da referência</legend>
+          <ol>
+            <li>
+              <label for="mode_default">Modo padrão:</label>
+              <select id="mode_default" name="mode_default">
+                <option value="essencial" [% IF conf.mode_default == 'essencial' %]selected="selected"[% END %]>Elementos essenciais</option>
+                <option value="completo" [% IF conf.mode_default == 'completo' %]selected="selected"[% END %]>Com elementos complementares</option>
+              </select>
+              <span class="hint">Seção 4 e 6.8 da norma: complementares, se usados, valem para todas as referências do mesmo tipo.</span>
+            </li>
+            <li>
+              <label for="allow_mode_toggle">Usuário pode alternar o modo:</label>
+              <input type="checkbox" id="allow_mode_toggle" name="allow_mode_toggle" value="1" [% IF conf.allow_mode_toggle %]checked="checked"[% END %] />
+            </li>
+            <li>
+              <label for="et_al_threshold">Quatro ou mais autores:</label>
+              <select id="et_al_threshold" name="et_al_threshold">
+                <option value="4" [% IF conf.et_al_threshold == 4 %]selected="selected"[% END %]>Primeiro autor + et al. (8.1.1.2)</option>
+                <option value="0" [% IF conf.et_al_threshold == 0 %]selected="selected"[% END %]>Listar todos (8.1.1.1)</option>
+              </select>
+              <span class="hint">"[e outros]" no 245 $c sempre gera et al.</span>
+            </li>
+            <li>
+              <label for="online_policy">Disponível em (URL):</label>
+              <select id="online_policy" name="online_policy">
+                <option value="recurso" [% IF conf.online_policy == 'recurso' %]selected="selected"[% END %]>Só recurso online (856 _0, ou 008/23 = o)</option>
+                <option value="sempre" [% IF conf.online_policy == 'sempre' %]selected="selected"[% END %]>Também versão digitalizada (856 _1)</option>
+              </select>
+            </li>
+            <li>
+              <label for="uniform_title_brackets">Título uniforme em legislação:</label>
+              <input type="checkbox" id="uniform_title_brackets" name="uniform_title_brackets" value="1" [% IF conf.uniform_title_brackets %]checked="checked"[% END %] />
+              <span class="hint">110 + 240 &rarr; BRASIL. [Constituição (1988)]. (7.11.1)</span>
+            </li>
+            <li>
+              <label for="editor_default_abbrev">Abreviatura para "editor" (RDA):</label>
+              <select id="editor_default_abbrev" name="editor_default_abbrev">
+                [% FOREACH ab IN ['org.', 'coord.', 'ed.', 'comp.'] %]
+                <option value="[% ab | html %]" [% IF conf.editor_default_abbrev == ab %]selected="selected"[% END %]>[% ab | html %]</option>
+                [% END %]
+              </select>
+              <span class="hint">Usada quando o 245 $c não indica organizador, coordenador etc.</span>
+            </li>
+          </ol>
+        </fieldset>
+
+        <fieldset class="rows">
+          <legend>Frases locais de "não identificado"</legend>
+          <ol>
+            <li>
+              <label for="extra_place_phrases">Local (264 $a):</label>
+              <textarea id="extra_place_phrases" name="extra_place_phrases" rows="3">[% conf.extra_place_phrases | html %]</textarea>
+              <span class="hint">Uma por linha. Já reconhecidas: [Lugar de publicação não identificado], [Local de publicação não identificado], [S.l.]. Viram [<i>S. l.</i>].</span>
+            </li>
+            <li>
+              <label for="extra_publisher_phrases">Editora (264 $b):</label>
+              <textarea id="extra_publisher_phrases" name="extra_publisher_phrases" rows="3">[% conf.extra_publisher_phrases | html %]</textarea>
+              <span class="hint">Uma por linha. Já reconhecidas: [editora não identificada], [editor não identificado], [s.n.]. Viram [<i>s. n.</i>].</span>
+            </li>
+          </ol>
+        </fieldset>
+
+        <fieldset class="action">
+          <input type="submit" class="btn btn-primary" value="Salvar" />
+          <a class="cancel" href="/cgi-bin/koha/plugins/plugins-home.pl">Cancelar</a>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+
+[% INCLUDE 'intranet-bottom.inc' %]
