@@ -80,6 +80,9 @@ O plugin lê o MARC21 e aplica a NBR 6023:2025. As decisões principais:
 - **URL (Disponível em / Acesso em):** só quando o registro descreve o recurso online, isto é, com 856 de 2º indicador `0`, ou 2º indicador branco/`8` com 008/23 = `o`, `q` ou `s`. O 856 _1 (versão digitalizada do impresso) e o 856 _2 (recurso relacionado) não entram.
 - **Legislação:** jurisdição e título uniforme do 240 entre colchetes. Quando a lei sai em periódico (773), o negrito passa para o título do periódico.
 
+- <img width="1694" height="631" alt="captura_de_tela_plugin_abnt" src="https://github.com/user-attachments/assets/1b05409d-5e93-402f-afec-d819448c30a7" />
+
+
 ## API
 
 ```
