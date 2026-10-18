@@ -101,7 +101,7 @@ Resposta:
 
 Registros suprimidos no OPAC (942 $n = 1, com `OpacSuppression` ativa) só são devolvidos a usuários da equipe.
 
-## Exemplo do plngin funcionando a partir do menu Citar do OPAC
+## Exemplo do plugin funcionando a partir do menu Citar do OPAC
 <img width="1694" height="631" alt="captura_de_tela_plugin_abnt" src="https://github.com/user-attachments/assets/1b05409d-5e93-402f-afec-d819448c30a7" />
 
 ## Problemas comuns
